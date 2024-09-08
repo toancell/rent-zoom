@@ -7,7 +7,20 @@ const categoriesModel = new mongoose.Schema({
     slug:{
         type: String,
         required: true
+    },
+    title:{
+        type: String,
+        required: true
+    },
+    subtitle:{
+        type: String,
+        required: true
+    },
+    keyword:{
+        type: String,
+        required: true
     }
+    
 })
 const Category = mongoose.model('Category', categoriesModel)
 module.exports = Category

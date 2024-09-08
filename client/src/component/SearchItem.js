@@ -1,16 +1,17 @@
-import React from 'react'
+import React from "react";
 
-const SearchItem = ({firstIcon, backIcon}) => {
+const SearchItem = ({ firstIcon, backIcon }) => {
   return (
     <div className="w-full">
-      <div className="w-full bg-white py-1 px-2 rounded-lg">
-        {firstIcon}
-        <h2>this is text</h2>
+      <div className="w-full flex justify-between items-center bg-white py-2 px-2 rounded-lg">
+        <div className="flex gap-2 justify-center items-center">
+          {firstIcon}
+          <h2 className="text-sm">this is text</h2>
+        </div>
         {backIcon}
       </div>
-
     </div>
-  )
-}
+  );
+};
 
-export default SearchItem
+export default SearchItem;
