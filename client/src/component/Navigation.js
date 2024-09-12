@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setCategory } from "../slice/categorySlice";
+
 const Navigation = () => {
   const dispatch = useDispatch()
   const [allCategory, setAllCategory] = useState([]);
@@ -33,7 +34,7 @@ const Navigation = () => {
       <div className="text-black h-10 px-3 flex items-center justify-center hover:bg-slate-500 cursor-pointer">
         <NavLink to={""}>Trang Chủ </NavLink>
       </div>
-
+      
       {allCategory?.length > 0 &&
         allCategory.map((category) => (
           <div

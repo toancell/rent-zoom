@@ -1,9 +1,10 @@
-const UserModel = require("../models/UserModel");
+const UserModel = require("../models/userModel");
 const hashPassword = require("../ultis/hashPassword");
 const jwt = require("jsonwebtoken");
 const generateRandomPassword = require("../ultis/generatePassword");
 const sendMail = require("../ultis/sendMail");
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
+const getUserDetailFromToken = require("../ultis/getUserDetailFromToken");
 const signUpController = async (req, res) => {
   try {
     const { email, phone, name, password } = req.body;
@@ -11,8 +12,8 @@ const signUpController = async (req, res) => {
       return res.status(400).json({ message: "Missing input" });
     }
 
-    const checkEmail = await UserModel.findOne( {email} );
-    
+    const checkEmail = await UserModel.findOne({ email });
+
     if (checkEmail) {
       return res.status(400).json({ message: "User is exist" });
     }
@@ -56,11 +57,14 @@ const loginController = async (req, res) => {
     const token = jwt.sign(newUser, process.env.KEY_JWT, {
       expiresIn: "1d",
     });
-    return res.cookie('accessToken', token, { httpOnly: true }).status(200).json({
-      message: "Login successfully",
-      token,
-      user,
-    });
+    return res
+      .cookie("token", token, { httpOnly: true })
+      .status(200)
+      .json({
+        message: "Login successfully",
+        token,
+        user,
+      });
   } catch (err) {
     console.log(err);
   }
@@ -94,34 +98,66 @@ const RequestForgetPassword = async (req, res) => {
     });
   }
 };
+const getDetailUserInf = async(req,res) =>{
+  try{
+    const token = req.cookies.token || ""
+    const user  = await getUserDetailFromToken(token)
+    return res.status(200).json({
+      message: "success",
+      data: user,
+      success: true
+    })
+  }catch(err){
+    return res.status(500).json({
+      message: err.message || err,
+      err: true,
+    })
+  }
+}
 const ForgetPassword = async (req, res) => {
   try {
-    const { token, resetcode,newPassword } = req.body;
+    const { token, resetcode, newPassword } = req.body;
     jwt.verify(token, process.env.KEY_JWT, async (err, decoded) => {
       if (err)
         return res.status(400).json({ error: "Invalid or expired token" });
-      const { email, resetCode:storedCode } = decoded;
-      console.log(resetcode)
-      if(storedCode !== resetcode){
-            return res.status(400).json({error:"Invalid code"})
+      const { email, resetCode: storedCode } = decoded;
+      console.log(resetcode);
+      if (storedCode !== resetcode) {
+        return res.status(400).json({ error: "Invalid code" });
       }
-      
-      const hashednewPassword =await hashPassword(newPassword)
-      await UserModel.findOneAndUpdate({email},{
-        password:hashednewPassword
-      })
+
+      const hashednewPassword = await hashPassword(newPassword);
+      await UserModel.findOneAndUpdate(
+        { email },
+        {
+          password: hashednewPassword,
+        }
+      );
       return res.status(200).json({
-        message:"Password changed successfully",
+        message: "Password changed successfully",
         success: true,
-      })
+      });
     });
   } catch (err) {
     console.log(err);
   }
 };
+const LogOut= async(req,res) => {
+  try{
+    
+    return res.cookie("token", "", {secure: true, httpOnly: true}).json({
+      message:"Log out successfully",
+      success: true,
+    })
+  }catch(err){
+    return res.status(400).json({message: err.message});
+  }
+}
 module.exports = {
   signUpController,
   loginController,
   RequestForgetPassword,
   ForgetPassword,
+  getDetailUserInf,
+  LogOut
 };

@@ -26,7 +26,6 @@ const Login = () => {
       [name]: value
     }))
   }
-  console.log(user)
   const handleLogin = async (e) => {
     e.preventDefault();
     const url= '/api/auth/login'
@@ -38,13 +37,13 @@ const Login = () => {
     if (response.data.user) {
       dispatch(setLogin(response.data.user))
       dispatch(setToken(response.data.token))
-      console.log(response.data)
-      toast.success("Đăng nhập thành công");
+      localStorage.setItem('token', response.data.token)
       navigate("/")
     } else {
       toast.error("Đăng nhập thất bại");
     }
   }
+  
   return (
     <div className="flex items-center justify-center h-screen">
       <form className="w-[50%] p-6 bg-white rounded-lg shadow-lg">

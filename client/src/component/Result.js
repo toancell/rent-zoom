@@ -14,7 +14,7 @@ const Result = () => {
   };
 
   return (
-    <div className="lg:w-2/3 mt-3 px-3 bg-slate-300 space-y-2 rounded-t-lg">
+    <div className="w-2/3 h-fit px-3 bg-slate-300 space-y-2 rounded-t-lg">
       <div className="py-2 space-y-3 ">
         <h3 className="text-lg font-bold">Tổng 23.730 kết quả</h3>
         <div className="space-x-3">
