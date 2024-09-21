@@ -1,12 +1,13 @@
 import React from "react";
 
-const Item = () => {
+const Item = ({data}) => {
+  console.log(data);
   return (
     <div className=" flex space-x-4 border-t-2 border-blue-300 py-3">
       <div className="w-1/4">
         <img
           className="w-full object-cover rounded-md"
-          src="https://pt123.cdn.static123.com/images/thumbs/450x300/fit/2024/08/05/z5700891578770-a45ef51685d48cf0a41f8f020ceacbc4_1722840941.jpg"
+          src={data.imgList[0].url}
           alt=""
         />
       </div>

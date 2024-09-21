@@ -4,10 +4,10 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 
 const ProtectRoute = ({ children }) => {
-    const userData = useSelector((state) => state.user.user);
-
-    if (userData?.role !== 'admin') {
-        toast.error("User is not an admin");
+    const user = useSelector((state) => state.user.isLogin);
+    
+    if (!user ) {
+        toast.error("Ban chua dang nhap");
         return <Navigate to="/" />; 
     }
 

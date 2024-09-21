@@ -11,42 +11,45 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { setLogin } from "../slice/authSlice";
+import { setLogin, setToken,setCheckLogin } from "../slice/authSlice";
 const Header = () => {
+  const token = useSelector(
+    (state) => state.user.token || localStorage.getItem("token")
+  );
+  console.log("token", token);
 
-const token= useSelector((state) => state.user.token || localStorage.getItem("token"))
-console.log("token",token)
-  const [userData,setUserData] = useState()
-  const dispatch = useDispatch()
-  useEffect(() =>{
-    const getDetailUser =async ()=>{
-      try{
+  const [userData, setUserData] = useState();
+  const dispatch = useDispatch();
+  dispatch(setToken(token));
+  useEffect(() => {
+    const getDetailUser = async () => {
+      try {
         const response = await axios({
-          url: "api/auth/detail-user",
+          url: `${process.env.REACT_APP_BACKEND}/api/auth/detail-user`,
           method: "GET",
-          withCredentials: true
-        })
-        if(response?.data.success){
-          dispatch(setLogin(response?.data.data))
-          setUserData(response?.data.data)
-         
+          withCredentials: true,
+        });
+        if (response?.data.success) {
+          dispatch(setLogin(response?.data.data));
+          setUserData(response?.data.data);
+          dispatch(setCheckLogin(true))
         }
-      }catch(err){
-        console.log(err)
+      } catch (err) {
+        console.log(err);
       }
+    };
+    if (token) {
+      getDetailUser();
     }
-    if(token){
-      getDetailUser()
-    }
-  },[token])
+  }, [token,dispatch]);
 
   const [boxModal, setBoxModal] = useState(false);
-  console.log("userData",userData);
+  console.log("userData", userData);
   const TurnModal = () => {
     setBoxModal(!boxModal);
   };
   return (
-    <div className="h-16 py-5 bg-slate-800 w-full flex justify-between items-center px-8 min-w-md">
+    <div className="h-16 py-5  bg-slate-800 w-full flex justify-between items-center px-8 min-w-md">
       <div>
         <span className="text-white">This is Logo</span>
       </div>
@@ -55,7 +58,7 @@ console.log("token",token)
           <CiHeart size={24} />
           <span className="hover:underline">Yêu thích</span>
         </NavLink>
-        {userData ? (
+        { userData ? (
           <>
             <div className="flex justify-center items-center text-white space-x-8">
               <div className="flex justify-center items-center space-x-2">
@@ -71,15 +74,14 @@ console.log("token",token)
               </div>
               <div className="flex justify-center items-center space-x-2 hover:cursor-pointer group relative ">
                 <TbTableOptions size={20} />
-                <div className="group-hover:underline" onClick={TurnModal}>
+                <div className="group-hover:underline " onClick={TurnModal}>
                   Quản lí tài khoản
                 </div>
-                { boxModal ? 
-                  <div className="absolute w-[200px] bg-slate-100 shadow-md text-black rounded-lg py-2 px-2 right-0 top-12">
+                {boxModal ? (
+                  <div className="absolute w-[200px] bg-slate-100 shadow-md z-50 text-black rounded-lg py-2 px-2 right-0  top-12">
                     <BoxModal handleClick={TurnModal} />
                   </div>
-                  : null
-                }
+                ) : null}
               </div>
             </div>
           </>

@@ -1,18 +1,29 @@
 const mongoose = require('mongoose');
+const imageSchema = new mongoose.Schema({
+    url: {
+        type: String,
+        required: true
+    },
+    
+});
 const roomSchema= new mongoose.Schema({
-    name: {
+    title: {
+        type: String,
+        required: true,
+    },
+    province: {
         type: String,
         required: true
     },
-    address: {
+    district:{
         type: String,
         required: true
     },
-    monney:{
+    ward:{
         type: String,
         required: true
     },
-    acreage:{
+    street:{
         type: String,
         required: true
     },
@@ -20,24 +31,33 @@ const roomSchema= new mongoose.Schema({
         type: String,
         required: true
     },
-    dateEnd: {
-        type: String,
+    acreage:{
+        type: Number,
+        required: true
+    },
+    monney:{
+        type: Number,
         required: true
     },
     userCreated: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: "User",
-        required: true
+        
+    },
+    phone: {
+        required: true,
+        type: Number,
+        
     },
     category:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: "Category",
         required: true
+        
     },
-    images:{
-        type: [String],
-        required: true
-    }
+    imgList:[
+       imageSchema
+    ]
 },{timestamps: true})
 const RoomModel = mongoose.model('Room', roomSchema)
 module.exports= RoomModel

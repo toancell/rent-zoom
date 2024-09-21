@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setLogin, setToken } from "../slice/authSlice";
 import { useNavigate } from "react-router-dom";
 const Login = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [checkPassword, setCheckPassword] = useState(true);
   const [user, setUser] = useState({
-    email:"",
-    password:"",
+    email: "",
+    password: "",
   });
 
   const seePassword = () => {
@@ -20,30 +20,32 @@ const Login = () => {
   };
   const handleOnChange = (e) => {
     e.preventDefault();
-    const {name, value} = e.target
-    setUser( prev =>({
+    const { name, value } = e.target;
+    setUser((prev) => ({
       ...prev,
-      [name]: value
-    }))
-  }
+      [name]: value,
+    }));
+  };
   const handleLogin = async (e) => {
     e.preventDefault();
-    const url= '/api/auth/login'
-    const response = await axios(url,{
-      method: "POST",
-      data: user,
-      withCredentials: true
-    })
-    if (response.data.user) {
-      dispatch(setLogin(response.data.user))
-      dispatch(setToken(response.data.token))
-      localStorage.setItem('token', response.data.token)
-      navigate("/")
-    } else {
+    try {
+      const url = "/api/auth/login";
+      const response = await axios(url, {
+        method: "POST",
+        data: user,
+        withCredentials: true,
+      });
+      if (response.data.user) {
+        dispatch(setLogin(response.data.user));
+        dispatch(setToken(response.data.token));
+        localStorage.setItem("token", response.data.token);
+        navigate("/");
+      }
+    } catch (err) {
       toast.error("Đăng nhập thất bại");
     }
-  }
-  
+  };
+
   return (
     <div className="flex items-center justify-center h-screen">
       <form className="w-[50%] p-6 bg-white rounded-lg shadow-lg">
@@ -57,7 +59,7 @@ const Login = () => {
             type="text"
             id="email"
             name="email"
-            value= {user.email}
+            value={user.email}
             className="w-full p-2 rounded-md bg-slate-300 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Email"
             onChange={handleOnChange}
@@ -77,7 +79,9 @@ const Login = () => {
             className="w-full p-2 pr-8 rounded-md bg-slate-300 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Nhập mật khẩu"
           />
-          <div onClick={seePassword} className="absolute bottom-2 right-2">{checkPassword ? <FaEye /> : <FaEyeSlash/> }</div>
+          <div onClick={seePassword} className="absolute bottom-2 right-2">
+            {checkPassword ? <FaEye /> : <FaEyeSlash />}
+          </div>
         </div>
 
         <div className="text-center">
@@ -91,7 +95,10 @@ const Login = () => {
         </div>
 
         <div className="flex justify-between mt-4">
-          <Link to={"/request-forget-password"} className="text-blue-800 cursor-pointer">
+          <Link
+            to={"/request-forget-password"}
+            className="text-blue-800 cursor-pointer"
+          >
             Bạn quên mật khẩu?
           </Link>
           <Link to={"/signup"} className="text-blue-800 cursor-pointer">

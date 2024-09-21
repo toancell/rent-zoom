@@ -8,6 +8,9 @@ import ResetPassword from "../pages/ResetPassword";
 import SinglePage from "../pages/SinglePage";
 import Createpost from "../pages/admin/Createpost";
 import ProtectRoute from "../middleware/ProtectRoute";
+import Admin from "../pages/admin/Admin";
+import ManagerPost from "../pages/admin/ManagerPost";
+import UpdatePost from "../pages/admin/UpdatePost"
 const router = createBrowserRouter([
   {
     path: "/",
@@ -39,10 +42,20 @@ const router = createBrowserRouter([
       },
       {
         path: "admin",
+        element: <ProtectRoute><Admin /></ProtectRoute>,
         children: [{ 
             path: "create-post", 
-            element: <Createpost />
-        }],
+            element: <ProtectRoute><Createpost /></ProtectRoute>
+        },
+        {
+          path: "manager-post",
+          element : <ProtectRoute><ManagerPost /></ProtectRoute>
+        },
+        {
+          path: "update-post/:postID",
+          element : <ProtectRoute><UpdatePost /></ProtectRoute>
+        }
+      ],
       },
     ],
   },
