@@ -13,15 +13,15 @@ const ManagerPost = () => {
   const navigation = useNavigate()
   const [allPost, setAllPost] = useState([]);
   const [searchList, setSearchList] = useState([]);
-
+  console.log("user", user)
   useEffect(() => {
     const getAllRoom = async () => {
       try {
         const response = await axios({
           url: "/api/room/get-room-posted-by-user",
-          method: "GET",
+          method: "POST",
           withCredentials: true,
-          data: user._id
+          data:  {userCreated: user.name}
         });
         if (response.data) {
           setAllPost(response.data.allRoom);

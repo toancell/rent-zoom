@@ -37,7 +37,7 @@ const SignUp = () => {
         if(response){
             toast.success("Da tao tai khoan thanh cong")
         }
-        navigate("/")
+        navigate("/login")
         
     }catch(err){
         toast.error(err.response.data.message || "Something went wrong")

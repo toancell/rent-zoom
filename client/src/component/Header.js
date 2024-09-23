@@ -11,16 +11,24 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { setLogin, setToken,setCheckLogin } from "../slice/authSlice";
+import { setLogin, setToken, setCheckLogin } from "../slice/authSlice";
 const Header = () => {
-  const token = useSelector(
-    (state) => state.user.token || localStorage.getItem("token")
-  );
+  const token = useSelector((state) => state.user.token);
   console.log("token", token);
 
   const [userData, setUserData] = useState();
   const dispatch = useDispatch();
   dispatch(setToken(token));
+
+  useEffect(() => {
+    if (!token) {
+      const savedToken = localStorage.getItem("token");
+      if (savedToken) {
+        dispatch(setToken(savedToken));
+      }
+    }
+  }, [token, dispatch]);
+
   useEffect(() => {
     const getDetailUser = async () => {
       try {
@@ -32,16 +40,17 @@ const Header = () => {
         if (response?.data.success) {
           dispatch(setLogin(response?.data.data));
           setUserData(response?.data.data);
-          dispatch(setCheckLogin(true))
+          dispatch(setCheckLogin(true));
         }
       } catch (err) {
         console.log(err);
       }
     };
+
     if (token) {
       getDetailUser();
     }
-  }, [token,dispatch]);
+  }, [token, dispatch]);
 
   const [boxModal, setBoxModal] = useState(false);
   console.log("userData", userData);
@@ -58,7 +67,7 @@ const Header = () => {
           <CiHeart size={24} />
           <span className="hover:underline">Yêu thích</span>
         </NavLink>
-        { userData ? (
+        {userData ? (
           <>
             <div className="flex justify-center items-center text-white space-x-8">
               <div className="flex justify-center items-center space-x-2">
@@ -68,8 +77,7 @@ const Header = () => {
                   alt=""
                 />
                 <div>
-                  <p className="text-sm">{userData.name}</p>
-                  <p className="text-sm">id: {userData._id}</p>
+                  <p className="text-sm">Xin chào, {userData.name}</p>
                 </div>
               </div>
               <div className="flex justify-center items-center space-x-2 hover:cursor-pointer group relative ">

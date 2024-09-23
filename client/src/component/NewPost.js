@@ -1,7 +1,27 @@
 import React from 'react'
-
+import { useEffect } from 'react'
+import axios from 'axios'
+import { useState } from 'react'
 const NewPost = () => {
-    
+  const [newPost,setNewPost] = useState([])
+  useEffect(()=>{
+    const getNewPost= async()=>{
+      try{
+        const response = await axios({
+          method: "GET",
+          url: "api/room/new-post",
+          withCredentials: true,
+        })
+        if(response.data.success){
+          setNewPost(response.data.newPost)
+        }
+      }catch(err){
+        console.log(err)
+      }
+    }
+    getNewPost()
+  },[])
+  console.log(newPost)
   return (
     <div>
       <div className="border border-gray-400 space-y-2 rounded-md p-3">

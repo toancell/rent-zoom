@@ -3,7 +3,7 @@ const router = express.Router()
 const {signUpController,RequestForgetPassword,loginController,LogOut, ForgetPassword, getDetailUserInf} = require("../controller/authController")
 const {createCategory, getAllCategory} = require("../controller/categoryController")
 
-const {createRoom, getAllRoom,deleteRoom,updateRoom,getRoomPostByUser} = require("../controller/roomController")
+const {createRoom, getAllRoom,getNewPost,deleteRoom,updateRoom,getRoomPostByUser} = require("../controller/roomController")
 
 router.post("/auth/signup", signUpController)
 router.post("/auth/forget-password", ForgetPassword)
@@ -20,5 +20,7 @@ router.post("/room/create-room", createRoom)
 router.post("/room/all-room",getAllRoom)
 router.delete("/room/delete-room/:postId",deleteRoom)
 router.put("/room/update-room/:postId",updateRoom)
-router.get("/room/get-room-posted-by-user", getRoomPostByUser)
+router.post("/room/get-room-posted-by-user", getRoomPostByUser)
+
+router.get("/room/new-post",getNewPost)
 module.exports= router

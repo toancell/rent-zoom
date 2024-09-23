@@ -5,8 +5,8 @@ import NewPost from './NewPost'
 const Sidebar = () => {
   return (
     <div className="w-1/3 space-y-3 ">
-      <FilterMonney />
-      <FilterAcreage />
+      {/* <FilterMonney />
+      <FilterAcreage /> */}
       <NewPost />
     </div>
   )

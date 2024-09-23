@@ -48,30 +48,53 @@ const createRoom = async (req, res) => {
   }
 };
 
-const getAllRoom = async(req, res) => {
-  try{
-    const {category}= req.body
-    console.log(category)
-    const filter = category ? {category} : {}
-    const allRoom = await RoomModel.find(filter)
-  return res.status(200).json({
-    message: "Get all rooms successfully",
-    allRoom
-  })
-  }catch(err){
+const getAllRoom = async (req, res) => {
+  try {
+    const { category, province, monney, acreage } = req.body;
+    console.log({ category, province, monney, acreage });
+
+    const filter = {};
+
+    if(category) filter.category= category;
+    if (province) filter.province = province;
+    
+    
+    if (monney?.a) {
+      if(monney.b === null){
+        monney.b =10000000000000000
+      }
+      filter.monney = { $gte: monney.a, $lte: monney.b };
+      
+    }
+    
+    if (acreage?.min) {
+      if(acreage.b==null){
+        acreage.b=10000000000000000
+      }
+      filter.acreage = { $gte: acreage.min, $lte: acreage.max};
+    }
+    console.log("filter",filter)
+    const allRoom = await RoomModel.find(filter);
+    
+    return res.status(200).json({
+      message: "Get all rooms successfully",
+      allRoom,
+    });
+  } catch (err) {
     return res.status(400).json({
-      message: "Some thing wrong",
-      err
-    })
+      message: "Something went wrong",
+      err,
+    });
   }
-}
+};
+
 
 
 
 const getRoomPostByUser = async(req, res) => {
   try{
-    const {userId} = req.body
-    const RoomPostByUser = await RoomModel.find({userId})
+    const {userCreated} = req.body
+    const RoomPostByUser = await RoomModel.find({userCreated})
     return res.status(200).json({
       message: "Get room successfully",
       allRoom: RoomPostByUser
@@ -84,7 +107,20 @@ const getRoomPostByUser = async(req, res) => {
   }
 }
 
-
+const getNewPost = async(req, res) => {
+  try{
+        const newPost= await RoomModel.find().sort({createdAt: -1}).limit(10)
+        return res.status(200).json({
+          message: "Success",
+          success: true,
+          newPost
+        })
+  }catch(err){
+    return res.status(400).json({
+      err
+    })
+  }
+}
 
 
 const deleteRoom = async (req, res) => {
@@ -142,5 +178,5 @@ const updateRoom= async (req, res) => {
 
 
 
-module.exports = { createRoom,getAllRoom,deleteRoom,updateRoom,getRoomPostByUser };
+module.exports = { createRoom,getAllRoom,deleteRoom,updateRoom,getRoomPostByUser,getNewPost };
 
