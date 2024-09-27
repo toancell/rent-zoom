@@ -3,6 +3,7 @@ import { FaPencilAlt } from "react-icons/fa";
 import { GoChecklist } from "react-icons/go";
 import { RxPencil2 } from "react-icons/rx";
 import { NavLink } from "react-router-dom";
+
 const navLink = [
   {
     id: 1,
@@ -23,13 +24,14 @@ const navLink = [
     icon: <RxPencil2 />,
   },
 ];
+
 const MenuBar = () => {
   return (
-    <div className="lg:flex-col flex-row flex p-3 lg:py-10 bg-slate-100 lg:h-fit">
-      {navLink.map((item, key) => (
+    <div className="lg:flex-col lg:fixed lg:h-full flex-row flex p-3 lg:py-10 bg-slate-100">
+      {navLink.map((item) => (
         <div
           key={item.id}
-          className="flex items-center space-x-3 text-lg border-black-1 border-b-2 hover:bg-slate-200"
+          className="flex items-center space-x-3 text-lg border-b-2 border-black hover:bg-slate-200 transition-colors duration-300 w-full"
         >
           {item.icon}
           <NavLink

@@ -11,6 +11,8 @@ import ProtectRoute from "../middleware/ProtectRoute";
 import Admin from "../pages/admin/Admin";
 import ManagerPost from "../pages/admin/ManagerPost";
 import UpdatePost from "../pages/admin/UpdatePost"
+import DetailPost from "../pages/DetailPost";
+import ProfileEdit from "../pages/admin/ProfileEdit";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -54,9 +56,17 @@ const router = createBrowserRouter([
         {
           path: "update-post/:postID",
           element : <ProtectRoute><UpdatePost /></ProtectRoute>
+        },
+        {
+          path:"update-profile",
+          element : <ProtectRoute><ProfileEdit/></ProtectRoute>
         }
       ],
       },
+      {
+        path:"detail/:postID",
+        element: <DetailPost/>
+      }
     ],
   },
 ]);

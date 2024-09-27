@@ -5,8 +5,7 @@ import PageTitle from "./PageTitle";
 import Result from "../component/Result";
 import Sidebar from "../component/Sidebar";
 import Advertisement from "../component/Advertisement";
-import { useParams } from "react-router-dom";
-import { useState } from "react";
+
 const SinglePage = () => {
   const categoryData = useSelector((state) => state.category);
   console.log(categoryData);

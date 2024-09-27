@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import axios from "axios"
-import toast from "react-hot-toast"
+import axios from "axios";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import UploadImage from "../middleware/UploadImage";
 const SignUp = () => {
-    const navigate= useNavigate()
+  const navigate = useNavigate();
   const [checkPassword, setCheckPassword] = useState(true);
+  const [imgUpload, setImgUpload] = useState();
   const seePassword = () => {
     setCheckPassword((prev) => !prev);
   };
@@ -24,30 +26,80 @@ const SignUp = () => {
       [name]: value,
     }));
   };
-  const handleSubmit = async (e) => {
-    
+  const uploadImg = async (e) => {
     e.preventDefault();
-    const url= "/api/auth/signup"
-    try{
-        const response = await axios(url,{
-            method: "POST",
-            data: userData,
-            withCredentials: true,
-        })
-        if(response){
-            toast.success("Da tao tai khoan thanh cong")
-        }
-        navigate("/login")
-        
-    }catch(err){
-        toast.error(err.response.data.message || "Something went wrong")
+
+    const fileInput = e.target.files[0];
+    if (!fileInput) {
+      toast.error("Không có tệp nào được chọn");
+      return;
     }
-    
-  }
+
+    if (fileInput.size > 5 * 1024 * 1024) {
+      toast.error("Chỉ tải tệp dưới 5MB");
+      return;
+    }
+
+    try {
+      const file = await UploadImage(fileInput);
+      if (!file || !file.secure_url) {
+        toast.error("Không thể tải ảnh lên");
+        return;
+      }
+      setImgUpload(file.secure_url);
+      toast.success("Tải ảnh lên thành công");
+    } catch (err) {
+      toast.error("Đã xảy ra lỗi khi tải ảnh lên");
+    }
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const url = "/api/auth/signup";
+    if (!imgUpload) {
+      toast.error("Bạn chưa cập nhật ảnh đại diện");
+    }
+    const uploadData = { ...userData, profile: imgUpload };
+    try {
+      const response = await axios(url, {
+        method: "POST",
+        data: uploadData,
+        withCredentials: true,
+      });
+      if (response) {
+        toast.success("Da tao tai khoan thanh cong");
+      }
+      navigate("/login");
+    } catch (err) {
+      toast.error(err.response.data.message || "Something went wrong");
+    }
+  };
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex items-center flex-col justify-center h-screen">
       <form className="w-[50%] p-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-black text-2xl font-bold mb-6">Đăng kí</h2>
+        <div className="flex justify-center">
+          <div className="w-[100px] h-[100px] rounded-full relative outline border-gray-500 ">
+            <img
+              src={
+                imgUpload || "https://phongtro123.com/images/default-user.png"
+              }
+              className="rounded-full w-full h-full object-cover"
+              alt=""
+            />
+            <input
+              type="file"
+              onChange={uploadImg}
+              className="w-full absolute inset-0 top-8 opacity-0 z-10 cursor-pointer"
+            />
+            {!imgUpload ? (
+              <span className="absolute text-xs inset-0 flex justify-center items-center font-bold text-blue-800">
+                Upload profile
+              </span>
+            ) : (
+              ""
+            )}
+          </div>
+        </div>
         <div className="mb-4">
           <label htmlFor="name" className="block text-black mb-2 uppercase">
             Name :
@@ -123,7 +175,6 @@ const SignUp = () => {
           <Link to={"/login"} className="text-blue-800 cursor-pointer">
             Bạn đã có tài khoản ? Đăng nhập
           </Link>
-          
         </div>
       </form>
     </div>

@@ -53,7 +53,7 @@ const BoxModal = ({ handleClick }) => {
     }
   };
   return (
-    <div className="flex flex-col space-y-2">
+    <div className="flex z-60 flex-col space-y-2">
       {navLink.map((item, key) => (
         <div
           key={item.id}

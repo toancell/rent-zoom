@@ -8,12 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "../../slice/postSlice";
 
 const ManagerPost = () => {
-  const user = useSelector((state) => state.user.user)
-  const dispatch = useDispatch()
-  const navigation = useNavigate()
+  const user = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
+  const navigation = useNavigate();
   const [allPost, setAllPost] = useState([]);
   const [searchList, setSearchList] = useState([]);
-  console.log("user", user)
+  console.log("user", user);
   useEffect(() => {
     const getAllRoom = async () => {
       try {
@@ -21,11 +21,11 @@ const ManagerPost = () => {
           url: "/api/room/get-room-posted-by-user",
           method: "POST",
           withCredentials: true,
-          data:  {userCreated: user.name}
+          data: { userIdCreated: user._id },
         });
         if (response.data) {
           setAllPost(response.data.allRoom);
-          setSearchList(response.data.allRoom)
+          setSearchList(response.data.allRoom);
         }
       } catch (err) {
         toast.error(err.message);
@@ -34,19 +34,20 @@ const ManagerPost = () => {
     getAllRoom();
   }, [user]);
   console.log(allPost);
-  const handleOnChange = (e) =>{
-    const searchKey = e.target.value.toLowerCase()
-    if(searchKey ===""){
-      setSearchList(allPost)
+  const handleOnChange = (e) => {
+    const searchKey = e.target.value.toLowerCase();
+    if (searchKey === "") {
+      setSearchList(allPost);
     }
-    const search = allPost.filter((item) => item.title.toLowerCase().includes(searchKey))
-    if(search.length === 0 ){
-      setSearchList(allPost)
-    }else{
+    const search = allPost.filter((item) =>
+      item.title.toLowerCase().includes(searchKey)
+    );
+    if (search.length === 0) {
+      setSearchList(allPost);
+    } else {
       setSearchList(search);
     }
-    
-  }
+  };
   const handleDelete = async (postId) => {
     try {
       const response = await axios({
@@ -63,9 +64,9 @@ const ManagerPost = () => {
       toast.error("Oops! Không thể xóa ");
     }
   };
-  const handleUpdate= (postId) =>{
-    navigation(`/admin/update-post/${postId}`)
-  }
+  const handleUpdate = (postId) => {
+    navigation(`/admin/update-post/${postId}`);
+  };
   return (
     <div className="py-2 px-6 space-y-5">
       <div className="flex justify-between items-center border-b-2 pb-4">
@@ -75,7 +76,6 @@ const ManagerPost = () => {
             type="text"
             placeholder="Tìm kiếm theo tiêu đề bài viết"
             className="border w-[300px] border-gray-400 z-0 p-1 pr-8"
-          
             onChange={handleOnChange}
           />
           <button className="absolute right-1">
@@ -88,7 +88,7 @@ const ManagerPost = () => {
           <thead>
             <tr className="border border-gray-300">
               <th className="border border-gray-300">Tiêu đề</th>
-              <th className="border border-gray-300">Nội dung</th>
+              <th className="border border-gray-300">Ngày đăng</th>
               <th className="border border-gray-300">Ảnh đại diện</th>
               <th className="border border-gray-300">Giá</th>
               <th className="border border-gray-300"></th>
@@ -98,10 +98,17 @@ const ManagerPost = () => {
             {searchList.length > 0 ? (
               searchList.map((index) => (
                 <tr className="border border-gray-300" key={index._id}>
-                  <td className="border border-gray-300">{index.title}</td>
-                  <td className="border border-gray-300">
-                    {index.description}
+                  <td className="border border-gray-300 max-w-xs ">
+                    {index.title}
                   </td>
+                  <td className="border border-gray-300 ">
+                    {new Date(index.createdAt).toLocaleDateString("vi-VN", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    })}
+                  </td>
+
                   <td className="border border-gray-300">
                     {" "}
                     <img
@@ -111,20 +118,19 @@ const ManagerPost = () => {
                     />
                   </td>
                   <td className="border border-gray-300">{index.monney}</td>
-                  <td className="border border-gray-300 py-2 space-x-2">
-                    <button onClick={() => {
+                  <td className="border border-gray-300 w-20">
+                    <button
+                      onClick={() => {
                         handleUpdate(index._id);
-                        dispatch(setPost(index))
-                        
+                        dispatch(setPost(index));
                       }}
-                      className="py-1 px-2 bg-green-900 rounded-lg text-white"
-                      
+                      className="py-0.5 px-1 text-xs bg-green-900 rounded-lg text-white"
                     >
-                      Update 
+                      Update
                     </button>
 
                     <button
-                      className="py-1 px-2 bg-red-900 rounded-lg text-white"
+                      className="py-0.5 px-1 text-xs bg-red-900 rounded-lg text-white"
                       onClick={() => {
                         handleDelete(index._id);
                       }}

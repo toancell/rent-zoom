@@ -8,6 +8,7 @@ const authSlice = createSlice({
             phone: "",
             _id: "",
             email: "",
+            profile: "",
         },
         token: "",
         isLogin: false
@@ -17,7 +18,8 @@ const authSlice = createSlice({
             state.user.name = action.payload.name;
             state.user.phone = action.payload.phone;
             state.user._id = action.payload._id;
-            state.user.email = action.payload.email;  
+            state.user.email = action.payload.email;
+            state.user.profile = action.payload.profile;  
         },
         setToken: (state, action) => {
             state.token = action.payload;
@@ -28,6 +30,7 @@ const authSlice = createSlice({
             state.user._id="";
             state.user.email = "";
             state.token = ""
+            state.user.profile = ""
         },
         setCheckLogin: (state, action) => {
             state.isLogin = action.payload

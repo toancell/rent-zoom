@@ -46,7 +46,7 @@ const roomSchema= new mongoose.Schema({
     },
     phone: {
         required: true,
-        type: Number,
+        type: String,
         
     },
     category:{
@@ -57,7 +57,11 @@ const roomSchema= new mongoose.Schema({
     },
     imgList:[
        imageSchema
-    ]
+    ],
+    userIdCreated:{
+        type: String,
+        required: true
+    }
 },{timestamps: true})
 const RoomModel = mongoose.model('Room', roomSchema)
 module.exports= RoomModel

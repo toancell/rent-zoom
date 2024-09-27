@@ -7,8 +7,8 @@ const bcrypt = require("bcrypt");
 const getUserDetailFromToken = require("../ultis/getUserDetailFromToken");
 const signUpController = async (req, res) => {
   try {
-    const { email, phone, name, password } = req.body;
-    if (!phone && !password && !name && !email) {
+    const { email, phone, name, password,profile } = req.body;
+    if (!phone && !password && !name && !email && !profile) {
       return res.status(400).json({ message: "Missing input" });
     }
 
@@ -23,6 +23,7 @@ const signUpController = async (req, res) => {
       password: hashedPassword,
       phone,
       name,
+      profile
     });
 
     return res.status(200).json({
@@ -153,11 +154,28 @@ const LogOut= async(req,res) => {
     return res.status(400).json({message: err.message});
   }
 }
+const UpdateProfile =async (req, res) => {
+  try{
+    const {userID}= req.params
+    console.log(userID)
+    const {profile,name,phone}= req.body
+    const updateData = await UserModel.findByIdAndUpdate(userID,{profile,name,phone},{new: true})
+    return res.status(200).json({
+      success: true,
+      message: "Update successfully",
+      updateData
+    })
+  }catch(err){ 
+    return res.status(400).json({message: err.message});
+
+  }
+}
 module.exports = {
   signUpController,
   loginController,
   RequestForgetPassword,
   ForgetPassword,
   getDetailUserInf,
-  LogOut
+  LogOut,
+  UpdateProfile
 };

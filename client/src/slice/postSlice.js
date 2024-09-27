@@ -15,7 +15,8 @@ const postSlice= createSlice({
         acreage:"",
         userCreated: "",
         phone: "",
-        imgList: []
+        imgList: [],
+        
     },
     reducers:{
         setPost : (state, action) =>{

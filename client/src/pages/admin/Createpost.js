@@ -163,8 +163,18 @@ const Createpost = ({userData,update}) => {
       toast.error("Missing input");
       return;
     }
-    
-    const newAddress = {...address, imgList: allImageUploaded };
+    if (address.title.length < 50) {
+      toast.error("Tiêu đề phải lớn hơn 50 kí tự");
+      return;
+    }
+    if (address.title.description < 200) {
+      toast.error("Nội dung mô tả phải lớn hơn 200 kí tự");
+      return;
+    }
+    if(allImageUploaded.length < 5){
+      toast.error("Bạn cần up 5 ảnh")
+    }
+    const newAddress = {...address, imgList: allImageUploaded,userIdCreated: user._id };
     try {
       
       const response = await axios( {
